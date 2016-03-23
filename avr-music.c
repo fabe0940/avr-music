@@ -9,27 +9,33 @@
 int init(void);
 void handler_press(char c);
 void handler_release(void);
+void handler_toggle(void);
 
 int init(void) {
-	int success = 0;
+	int status = 0;
 
 	if (lcd_init()) {
-		success = -1;
+		status = -1;
+	} else {
+		lcd_power(POWER_ON);
+		lcd_clear();
 	}
 
-	if (timer_init(PRESCALER_NONE)) {
-		success = -1;
+	if (!status && timer_init(TIMER_PRESCALER_1)) {
+		status = -1;
 	}
 
-	if (key_init(handler_press, handler_release)) {
-		success = -1;
+	if (!status && key_init(handler_press, handler_release)) {
+		status = -1;
 	}
 
-	DDRC = 0xFF;
+	if (!status) {
+		DDRC = 0xFF;
+		PORTC = 0xFF;
+		sei();
+	}
 
-	cli();
-
-	return success;
+	return status;
 }
 
 int main(void) {
@@ -39,25 +45,16 @@ int main(void) {
 		exit(-1);
 	}
 
-	lcd_power(POWER_ON);
-	lcd_clear();
 
-	fprintf(stdlcd, "> ");
-
-	c = '\0';
 	while (1) {
-		c = key_get_char();
-
-		switch (c) {
+		switch (c = key_get_char()) {
 			case '*':
 				lcd_clear();
-				fprintf(stdlcd, "\r> ");
-				continue;
 				break;
 			case '#':
 				c = '\n';
 			default:
-				fprintf(stdlcd, "%c", c);
+				fprintf(stdlcd, "%c", key_get_char());
 		}
 	}
 
@@ -65,11 +62,24 @@ int main(void) {
 }
 
 void handler_press(char c) {
-	PORTC = ~c;
+	switch (c) {
+		default:
+			timer_callback_register(0x0080, handler_toggle);
+	}
+
 	return;
 }
 
 void handler_release(void) {
-	PORTC = 0xFF;
+	timer_callback_clear();
+	return;
+}
+
+void handler_toggle(void) {
+	static uint8_t val = 0x00;
+
+	val = (val + 1) % 2;
+	PORTC = ~val;
+
 	return;
 }

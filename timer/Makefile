@@ -10,7 +10,7 @@ all : $(OBJ)
 %.o : %.c
 	$(CC) $(CFLAGS) -c $<
 
-main.c : timer.h
+main.c : timer.h defines.h
 
 clean :
 	\rm -f $(OBJ)

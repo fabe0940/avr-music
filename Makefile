@@ -48,6 +48,7 @@ clean :
 	\rm -f $(APPLICATION_NAME) $(APPLICATION_NAME).hex $(OBJ)
 	$(MAKE) clean -C lcd/
 	$(MAKE) clean -C key/
+	$(MAKE) clean -C timer/
 
 rebuild :
 	make clean

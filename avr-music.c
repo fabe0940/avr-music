@@ -6,6 +6,19 @@
 #include "stream.h"
 
 void init(void);
+void handler_press(char c);
+void handler_release(void);
+
+void init(void) {
+	key_init(handler_press, handler_release);
+	lcd_init();
+
+	DDRC = 0xFF;
+
+	cli();
+
+	return;
+}
 
 int main(void) {
 	char c;
@@ -20,23 +33,29 @@ int main(void) {
 	c = '\0';
 	while (1) {
 		c = key_get_char();
-		PORTC = ~c;
-		c = c == '*' ? '\r' : c;
-		c = c == '#' ? '\n' : c;
-		if (c == '\r') lcd_clear();
-		fprintf(stdlcd, "%c", c);
+
+		switch (c) {
+			case '*':
+				lcd_clear();
+				fprintf(stdlcd, "\r> ");
+				continue;
+				break;
+			case '#':
+				c = '\n';
+			default:
+				fprintf(stdlcd, "%c", c);
+		}
 	}
 
 	exit(0);
 }
 
-void init(void) {
-	key_init();
-	lcd_init();
+void handler_press(char c) {
+	PORTC = ~c;
+	return;
+}
 
-	DDRC = 0xFF;
-
-	cli();
-
+void handler_release(void) {
+	PORTC = 0xFF;
 	return;
 }

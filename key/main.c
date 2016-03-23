@@ -24,8 +24,13 @@ char keys[SIZE][SIZE] = {
 	{ '7', '8', '9', 'C' },
 	{ '*', '0', '#', 'D' }
 };
+_key_press_handler press;
+_key_release_handler release;
 
-int key_init(void) {
+int key_init(_key_press_handler kph, _key_release_handler krh) {
+	press = kph;
+	release = krh;
+
 	IN_MASK = 0x00;
 	IN_MASK |= (0x01 << COL1);
 	IN_MASK |= (0x01 << COL2);
@@ -55,8 +60,10 @@ char key_get_char(void) {
 			for (j = 0; j < SIZE; j++) {
 				if (~(PINB & IN_MASK) & (0x01 << cols[j])) {
 					ch = keys[i][j];
+					press(ch);
 					_delay_us(5);
 					while (~(PINB & IN_MASK) & (0x01 << cols[j]));
+					release();
 					break;
 				}
 			}

@@ -3,27 +3,41 @@
 #include <util/delay.h>
 #include "key/key.h"
 #include "lcd/lcd.h"
+#include "timer/timer.h"
 #include "stream.h"
 
-void init(void);
+int init(void);
 void handler_press(char c);
 void handler_release(void);
 
-void init(void) {
-	key_init(handler_press, handler_release);
-	lcd_init();
+int init(void) {
+	int success = 0;
+
+	if (lcd_init()) {
+		success = -1;
+	}
+
+	if (timer_init(PRESCALER_NONE)) {
+		success = -1;
+	}
+
+	if (key_init(handler_press, handler_release)) {
+		success = -1;
+	}
 
 	DDRC = 0xFF;
 
 	cli();
 
-	return;
+	return success;
 }
 
 int main(void) {
 	char c;
 
-	init();
+	if (init()) {
+		exit(-1);
+	}
 
 	lcd_power(POWER_ON);
 	lcd_clear();

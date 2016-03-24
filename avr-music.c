@@ -39,23 +39,13 @@ int init(void) {
 }
 
 int main(void) {
-	char c;
-
 	if (init()) {
 		exit(-1);
 	}
 
 
 	while (1) {
-		switch (c = key_get_char()) {
-			case '*':
-				lcd_clear();
-				break;
-			case '#':
-				c = '\n';
-			default:
-				fprintf(stdlcd, "%c", key_get_char());
-		}
+		key_get_char();
 	}
 
 	exit(0);
@@ -63,7 +53,13 @@ int main(void) {
 
 void handler_press(char c) {
 	switch (c) {
+		case '*':
+			lcd_clear();
+			break;
+		case '#':
+			c = '\n';
 		default:
+			fprintf(stdlcd, "%c", c);
 			timer_callback_register(0x0080, handler_toggle);
 	}
 

@@ -42,7 +42,7 @@ $(TIMER_OBJ) : $(TIMER_SRC)
 %.o : %.c
 	$(CC) $(CFLAGS) -c $<
 
-avr-lcd.c : io.h
+avr-lcd.c : defines.h stream.h
 
 clean :
 	\rm -f $(APPLICATION_NAME) $(APPLICATION_NAME).hex $(OBJ)

@@ -4,6 +4,7 @@
 #include "key/key.h"
 #include "lcd/lcd.h"
 #include "timer/timer.h"
+#include "defines.h"
 #include "stream.h"
 
 int init(void);
@@ -52,16 +53,60 @@ int main(void) {
 }
 
 void handler_press(char c) {
+	uint16_t target;
+
 	switch (c) {
+		case '1':
+			target = NOTE_A3;
+			break;
+		case '2':
+			target = NOTE_A3S;
+			break;
+		case '3':
+			target = NOTE_B3;
+			break;
+		case 'A':
+			target = NOTE_C4;
+			break;
+		case '4':
+			target = NOTE_C4S;
+			break;
+		case '5':
+			target = NOTE_D4;
+			break;
+		case '6':
+			target = NOTE_D4S;
+			break;
+		case 'B':
+			target = NOTE_E4;
+			break;
+		case '7':
+			target = NOTE_F4;
+			break;
+		case '8':
+			target = NOTE_F4S;
+			break;
+		case '9':
+			target = NOTE_G4;
+			break;
+		case 'C':
+			target = NOTE_G4S;
+			break;
 		case '*':
-			lcd_clear();
+			target = NOTE_A4;
+			break;
+		case '0':
+			target = NOTE_A4S;
 			break;
 		case '#':
-			c = '\n';
-		default:
-			fprintf(stdlcd, "%c", c);
-			timer_callback_register(0x0080, handler_toggle);
+			target = NOTE_B4;
+			break;
+		case 'D':
+			target = NOTE_C5;
+			break;
 	}
+
+	timer_callback_register(target, handler_toggle);
 
 	return;
 }

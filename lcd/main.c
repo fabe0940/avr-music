@@ -11,24 +11,24 @@
 int lcd_init(void) {
 	_delay_ms(20);
 
-	_lcd_write(REG_CTRL, 0x38);
-	_lcd_write(REG_CTRL, 0x38);
-	_lcd_write(REG_CTRL, 0x38);
-	_lcd_write(REG_CTRL, 0x08);
-	_lcd_write(REG_CTRL, 0x01);
-	_lcd_write(REG_CTRL, 0x06);
+	_lcd_write(LCD_REG_CTRL, 0x38);
+	_lcd_write(LCD_REG_CTRL, 0x38);
+	_lcd_write(LCD_REG_CTRL, 0x38);
+	_lcd_write(LCD_REG_CTRL, 0x08);
+	_lcd_write(LCD_REG_CTRL, 0x01);
+	_lcd_write(LCD_REG_CTRL, 0x06);
 	
 	return 0;
 }
 
 int lcd_power(uint8_t pwr) {
-	_lcd_write(REG_CTRL, 0x0A | pwr << 2);
+	_lcd_write(LCD_REG_CTRL, 0x0A | pwr << 2);
 
 	return 0;
 }
 
 int lcd_clear(void) {
-	_lcd_write(REG_CTRL, 0x01);
+	_lcd_write(LCD_REG_CTRL, 0x01);
 
 	return 0;
 }
@@ -36,13 +36,13 @@ int lcd_clear(void) {
 int lcd_putchar(char ch, FILE *stream) {
 	switch (ch) {
 		case '\n':
-			_lcd_write(REG_CTRL, 0x80 | 0x40);
+			_lcd_write(LCD_REG_CTRL, 0x80 | 0x40);
 			break;
 		case '\r':
-			_lcd_write(REG_CTRL, 0x80 | 0x00);
+			_lcd_write(LCD_REG_CTRL, 0x80 | 0x00);
 			break;
 		default:
-			_lcd_write(REG_DATA, ch);
+			_lcd_write(LCD_REG_DATA, ch);
 	}
 
 	return 0;

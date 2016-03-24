@@ -17,7 +17,7 @@ int init(void) {
 	if (lcd_init()) {
 		status = -1;
 	} else {
-		lcd_power(POWER_ON);
+		lcd_power(LCD_POWER_ON);
 		lcd_clear();
 	}
 

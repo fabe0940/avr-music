@@ -1,7 +1,8 @@
 OVERVIEW
 ========
 
-???
+This program outputs a note between A3 and C5 whenever the corresponding key on
+the keypad is pressed.
 
 
 COMPILING
@@ -23,8 +24,7 @@ $ make install
 HARDWARE
 ========
 
-Attach PORTA to LCD Ctrl and PORTD to LCD Data. Put the keypad on PORTB and the
-speaker on PORTC.
+Attach PORTA to the speaker and PORTB to the keypad.
 
 
 RUNNING
@@ -41,10 +41,41 @@ As part of this assignment, we were asked to determine the size in bytes of
 each function used in this project. This data is most easily presented in a
 table.
 
-+--------------------+------+
-| FUNCTION           | SIZE |
-+--------------------+------+
-+--------------------+------+
++-------------------------+------+
+| FUNCTION                | SIZE |
++-------------------------+------+
+| key_init                |   34 |
+| key_get_char            |  252 |
+| _lcd_get_data           |    4 |
+| _lcd_set_ctrl           |   18 |
+| _lcd_set_ctrl_mode      |    4 |
+| _lcd_set_data           |    4 |
+| _lcd_set_data_mode      |    4 |
+| _lcd_read               |   48 |
+| _lcd_wait               |   12 |
+| _lcd_write              |   72 |
+| lcd_init                |   66 |
+| lcd_clear               |   14 |
+| lcd_power               |   24 |
+| lcd_putchar             |   50 |
+| timer_init              |   50 |
+| timer_callback_none     |    2 |
+| timer_callback_register |   18 |
+| timer_callback_clear    |   26 |
+| __vector_7              |   78 |
+| init                    |   46 |
+| main                    |   22 |
+| handler_press           |  134 |
+| handler_release         |    4 |
+| handler_toggle          |   22 |
++-------------------------+------+
+
+Each time the __vector_7 timer ISR is called, 81 assembly instructions are
+executed. Depending on the note being played, this ISR is called somewhere
+between every 1000 and every 2000 clock cycles. Taking a rough average of 1500
+cycles, this means 5.4% of this program's execution is spent in the timer ISR.
+
+Each note was approximately 15 to 20 percent sharp.
 
 
 CREDITS

@@ -23,7 +23,8 @@ $ make install
 HARDWARE
 ========
 
-Attach PORTA to LCD Ctrl and PORTB to LCD Data. 
+Attach PORTA to LCD Ctrl and PORTD to LCD Data. Put the keypad on PORTB and the
+speaker on PORTC.
 
 
 RUNNING

@@ -15,13 +15,6 @@ void handler_toggle(void);
 int init(void) {
 	int status = 0;
 
-	if (lcd_init()) {
-		status = -1;
-	} else {
-		lcd_power(LCD_POWER_ON);
-		lcd_clear();
-	}
-
 	if (!status && timer_init(TIMER_PRESCALER_1)) {
 		status = -1;
 	}
@@ -31,8 +24,8 @@ int init(void) {
 	}
 
 	if (!status) {
-		DDRC = 0xFF;
-		PORTC = 0xFF;
+		DDRA = 0xFF;
+		PORTA = 0xFF;
 		sei();
 	}
 
@@ -120,7 +113,7 @@ void handler_toggle(void) {
 	static uint8_t val = 0x00;
 
 	val = (val + 1) % 2;
-	PORTC = ~val;
+	PORTA = ~val;
 
 	return;
 }
